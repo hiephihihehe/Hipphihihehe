@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hippp's Diary</title>
+    <style>
+        /* =========================================
+           FRUTIGER WINTER AESTHETIC VARIABLES
+           ========================================= */
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            --glossy-btn-top: rgba(132, 250, 251, 1);
+            --glossy-btn-bottom: rgba(43, 145, 227, 1);
+            --text-glow: 0 0 10px rgba(255, 255, 255, 0.8);
+            --aurora-bg: linear-gradient(135deg, #0b1d3a 0%, #1a4a6d 40%, #51a4b8 80%, #a4e1e8 100%);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--aurora-bg);
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0; padding: 20px; color: #fff;
+            overflow-x: hidden;
+        }
+
+        .snowflakes {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: -1;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.3) 1px, transparent 1px),
+                radial-gradient(circle at 80% 40%, rgba(255,255,255,0.4) 2px, transparent 2px),
+                radial-gradient(circle at 40% 70%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
+                radial-gradient(circle at 90% 90%, rgba(255,255,255,0.5) 2.5px, transparent 2.5px);
+            background-size: 150px 150px;
+            animation: snowFloat 20s linear infinite;
+        }
+
+        @keyframes snowFloat {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-150px) rotate(10deg); }
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
+        .header { text-align: center; text-shadow: var(--text-glow); margin-bottom: 25px; }
+        .header h1 { font-size: 2.8rem; letter-spacing: 1px; margin-bottom: 5px; }
+
+        .tabs-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid var(--glass-border);
+            padding: 12px 35px; border-radius: 40px; cursor: pointer; font-weight: bold; font-size: 16px;
+            transition: all 0.3s ease; backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.3); text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: inset 0 1px 5px rgba(255,255,255,0.5), 0 0 15px rgba(132, 250, 251, 0.4);
+        }
+        .tab-btn.active {
+            background: linear-gradient(180deg, var(--glossy-btn-top) 0%, var(--glossy-btn-bottom) 100%);
+            border-color: rgba(255,255,255,0.8); color: #0b1d3a; text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: var(--glass-bg); border-radius: 20px; padding: 30px;
+            box-shadow: var(--glass-shadow); backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px); border: 1px solid var(--glass-border); margin-bottom: 25px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #e0f7fa; }
+        
+        input[type="date"], input[type="file"], textarea {
+            width: 100%; padding: 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3); color: white; font-family: inherit; font-size: 15px;
+            transition: all 0.3s;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        textarea { height: 130px; resize: vertical; }
+
+        .btn-submit {
+            background: linear-gradient(180deg, var(--glossy-btn-top) 0%, var(--glossy-btn-bottom) 100%);
+            color: #0b1d3a; border: 1px solid rgba(255, 255, 255, 0.6); padding: 15px 25px;
+            border-radius: 15px; cursor: pointer; font-weight: bold; font-size: 17px; width: 100%;
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(43, 145, 227, 0.5); }
+        .btn-submit:disabled { background: #666; cursor: not-allowed; transform: none; box-shadow: none; color: #ccc;}
+
+        .breadcrumb {
+            font-size: 16px; font-weight: bold; color: #a4e1e8; margin-bottom: 20px;
+            padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.2); display: flex; gap: 10px;
+        }
+        .breadcrumb span { cursor: pointer; padding: 6px 15px; border-radius: 20px; background: rgba(255,255,255,0.1); }
+        .breadcrumb span:hover { background: rgba(255,255,255,0.3); color: white; }
+        .breadcrumb .separator { background: none; padding: 0; cursor: default; }
+
+        .timeline-scroll-area { width: 100%; overflow-x: auto; padding-bottom: 20px; }
+        .timeline-container { position: relative; padding: 130px 20px; display: inline-flex; align-items: center; min-width: 100%; }
+        .timeline-axis {
+            position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); transform: translateY(-50%); z-index: 1;
+        }
+
+        .timeline-node-wrapper { position: relative; display: inline-block; width: 140px; height: 2px; z-index: 2; cursor: pointer; }
+        .node-dot {
+            position: absolute; width: 18px; height: 18px; background: radial-gradient(circle at 30% 30%, #ffffff, #84fafb);
+            border: 2px solid rgba(255,255,255,0.8); border-radius: 50%; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(132, 250, 251, 0.6); transition: all 0.3s;
+        }
+        .node-stem { position: absolute; width: 2px; background: rgba(255,255,255,0.6); left: 50%; transform: translateX(-50%); }
+        .node-box {
+            position: absolute; left: 50%; transform: translateX(-50%); background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.5); backdrop-filter: blur(8px); padding: 12px 20px; border-radius: 12px;
+            text-align: center; font-size: 14px; font-weight: bold; color: white; white-space: nowrap; transition: all 0.3s;
+        }
+        .node-box .sub-text { font-size: 12px; font-weight: normal; color: #d0f0f5; margin-top: 5px; }
+
+        .timeline-node-wrapper:hover .node-dot { transform: translate(-50%, -50%) scale(1.5); }
+        .timeline-node-wrapper.up .node-stem { bottom: 50%; height: 80px; }
+        .timeline-node-wrapper.up .node-box { bottom: calc(50% + 80px); }
+        .timeline-node-wrapper.down .node-stem { top: 50%; height: 80px; }
+        .timeline-node-wrapper.down .node-box { top: calc(50% + 80px); }
+
+        .timeline-node-wrapper.highlight .node-dot { background: radial-gradient(circle at 30% 30%, #ff9a9e, #fecfef); box-shadow: 0 0 15px #ff9a9e; }
+        .timeline-node-wrapper.highlight .node-stem { background: #ff9a9e; }
+        .timeline-node-wrapper.highlight .node-box { border-color: #ff9a9e; background: rgba(255, 154, 158, 0.2); }
+
+        .memory-item {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+            border-left: 5px solid #84fafb; padding: 25px; margin-bottom: 20px; border-radius: 12px;
+        }
+        .memory-item .entry-text { line-height: 1.7; font-size: 16px; white-space: pre-wrap; margin-bottom: 15px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .entry-media img, .entry-media video { max-width: 100%; max-height: 450px; border-radius: 10px; margin-top: 15px; border: 1px solid rgba(255,255,255,0.2); }
+        
+        #loading-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 29, 58, 0.8); z-index: 9999; justify-content: center; align-items: center;
+            font-size: 20px; font-weight: bold; color: #84fafb; text-shadow: 0 0 10px #84fafb;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="loading-overlay">❄️ ĐANG KẾT NỐI ĐÁM MÂY KÝ ỨC... ❄️</div>
+    <div class="snowflakes"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>❄️ Hippp's Diary ❄️</h1>
+            <p style="color: #d0f0f5; font-size: 1.1rem;">Đồng bộ đám mây - Truy cập mọi nơi</p>
+        </div>
+
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('write-tab')">📝 Viết Kỷ Niệm</button>
+            <button class="tab-btn" onclick="switchTab('timeline-tab')">⏳ Dòng Thời Gian</button>
+        </div>
+
+        <div id="write-tab" class="tab-content active">
+            <div class="card">
+                <form id="diary-form">
+                    <div class="form-group">
+                        <label>Chọn thời gian:</label>
+                        <input type="date" id="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dòng tâm sự:</label>
+                        <textarea id="text" placeholder="Hôm nay của bạn có gì đặc biệt không?..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Đính kèm Hình ảnh / Video:</label>
+                        <input type="file" id="media" accept="image/*,video/*">
+                    </div>
+                    <button type="submit" id="btn-submit" class="btn-submit">Gửi Lên Đám Mây Kỷ Niệm</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="timeline-tab" class="tab-content">
+            <div class="card" style="padding-top: 20px;">
+                <div class="breadcrumb" id="breadcrumb"></div>
+                <div class="timeline-scroll-area">
+                    <div class="timeline-container">
+                        <div class="timeline-axis"></div>
+                        <div id="timeline-nodes-container" style="display:flex;"></div>
+                    </div>
+                </div>
+                <div id="memory-viewer" style="margin-top: 30px;">
+                    <p style="text-align:center; color:rgba(255,255,255,0.7); font-style: italic;">Chạm vào một quả cầu tuyết thời gian để đánh thức ký ức...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================================
+        // ⚠️ ĐIỀN ĐƯỜNG LINK WEB APP APPS SCRIPT CỦA BẠN VÀO ĐÂY
+        // ========================================================
+        const API_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQdjxUAT35Dws2uhRC7FogXptBfjPJ_MytNHgtczPF007oMODVG1vqbJ6C6Nm6XPpBpI6NXXKtHpO4T4UXZ8Fsu-uZb2tQymWOwxLhIeMLQaKIjRiX1TosTYgieIw2ucBcVuOiQDfr4KZiXotz5de6CzDpHpOpbZvemY_wC-DAAzQd4vlAzsaaYLUW804h8GxzZbhYRgXikKkSOHlFR95wNtZQr0-xtlkHleeA3DW3gUGVoF2bO_o7uwEqMX7yfH4F8tZ0fZgOYFJmnTr1b1Z5njyuyVg&lib=MGlQwQIyF3jMu1aydSqMjno2pRoGp_7op";
+
+        document.getElementById('date').valueAsDate = new Date();
+        let currentView = 'year';
+        let activeYear = null;
+        let activeMonth = null;
+        let allMemories = [];
+
+        function showLoading(status) {
+            document.getElementById('loading-overlay').style.display = status ? 'flex' : 'none';
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            if (tabId === 'timeline-tab') loadCloudData();
+        }
+
+        // XỬ LÝ SUBMIT VÀ CONVERT FILE SANG BASE64 ĐỂ ĐẨY QUA API GAS
+        document.getElementById('diary-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('btn-submit');
+            submitBtn.disabled = true;
+            showLoading(true);
+
+            const dateValue = document.getElementById('date').value;
+            const textValue = document.getElementById('text').value;
+            const file = document.getElementById('media').files[0];
+
+            const payload = {
+                date: dateValue,
+                text: textValue,
+                fileData: null,
+                fileName: null,
+                fileType: null
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    payload.fileData = event.target.result;
+                    payload.fileName = file.name;
+                    payload.fileType = file.type;
+                    sendToCloud(payload);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                sendToCloud(payload);
+            }
+        });
+
+        function sendToCloud(payload) {
+            fetch(API_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                showLoading(false);
+                document.getElementById('btn-submit').disabled = false;
+                if(data.status === "success") {
+                    alert("Kỷ niệm đã được lưu vĩnh viễn trên Đám mây!");
+                    document.getElementById('diary-form').reset();
+                    document.getElementById('date').valueAsDate = new Date();
+                    document.querySelectorAll('.tab-btn')[1].click();
+                } else {
+                    alert("Lỗi: " + data.message);
+                }
+            })
+            .catch(err => {
+                showLoading(false);
+                document.getElementById('btn-submit').disabled = false;
+                alert("Không thể kết nối đến Cloud API. Hãy kiểm tra lại URL triển khai.");
+            });
+        }
+
+        // TẢI DỮ LIỆU TỪ GOOGLE SHEETS
+        function loadCloudData() {
+            showLoading(true);
+            fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                allMemories = data;
+                showLoading(false);
+                renderTimeline();
+            })
+            .catch(err => {
+                showLoading(false);
+                alert("Lỗi khi tải dòng thời gian từ Đám mây.");
+            });
+        }
+
+        function renderTimeline() {
+            updateBreadcrumb();
+            const container = document.getElementById('timeline-nodes-container');
+            const viewer = document.getElementById('memory-viewer');
+            container.innerHTML = '';
+            
+            if (currentView !== 'day') {
+                viewer.innerHTML = '<p style="text-align:center; color:rgba(255,255,255,0.7); font-style: italic;">Chạm vào một quả cầu tuyết thời gian phía trên để đi sâu vào ký ức...</p>';
+            }
+
+            if (allMemories.length === 0) {
+                container.innerHTML = '<p style="margin-left:20px;">Đám mây ký ức đang trống.</p>';
+                return;
+            }
+
+            let nodesData = [];
+
+            if (currentView === 'year') {
+                let years = [...new Set(allMemories.map(m => m.date.substring(0,4)))].sort();
+                nodesData = years.map(y => ({
+                    label: `Năm ${y}`, value: y, count: allMemories.filter(m => m.date.startsWith(y)).length
+                }));
+            } 
+            else if (currentView === 'month') {
+                let filtered = allMemories.filter(m => String(m.date).startsWith(activeYear));
+                let months = [...new Set(filtered.map(m => m.date.substring(5,7)))].sort();
+                nodesData = months.map(m => ({
+                    label: `Tháng ${m}`, value: m, count: filtered.filter(x => x.date.substring(5,7) === m).length
+                }));
+            } 
+            else if (currentView === 'day') {
+                let prefix = `${activeYear}-${activeMonth}`;
+                let filtered = allMemories.filter(m => String(m.date).startsWith(prefix));
+                let days = [...new Set(filtered.map(m => m.date.substring(8,10)))].sort();
+                nodesData = days.map(d => ({
+                    label: `Ngày ${d}`, value: d, entries: filtered.filter(x => x.date.substring(8,10) === d)
+                }));
+            }
+
+            nodesData.forEach((item, index) => {
+                const wrapper = document.createElement('div');
+                const direction = index % 2 === 0 ? 'up' : 'down';
+                wrapper.className = `timeline-node-wrapper ${direction}`;
+
+                if (index === nodesData.length - 1 && currentView !== 'day') {
+                    wrapper.classList.add('highlight');
+                }
+
+                let boxText = `<div>${item.label}</div>`;
+                if (currentView !== 'day') boxText += `<div class="sub-text">${item.count} bài viết</div>`;
+
+                wrapper.innerHTML = `<div class="node-stem"></div><div class="node-dot"></div><div class="node-box">${boxText}</div>`;
+
+                wrapper.addEventListener('click', () => {
+                    if (currentView === 'year') {
+                        activeYear = item.value; currentView = 'month'; renderTimeline();
+                    } else if (currentView === 'month') {
+                        activeMonth = item.value; currentView = 'day'; renderTimeline();
+                    } else if (currentView === 'day') {
+                        document.querySelectorAll('.timeline-node-wrapper').forEach(n => n.classList.remove('highlight'));
+                        wrapper.classList.add('highlight');
+                        showEntries(item.entries, item.label);
+                    }
+                });
+
+                container.appendChild(wrapper);
+            });
+            
+            if (currentView === 'day' && container.lastChild) {
+                container.lastChild.click();
+            }
+        }
+
+        function updateBreadcrumb() {
+            let html = `<span onclick="goToView('year')">❄️ Tất cả các năm</span>`;
+            if (currentView === 'month' || currentView === 'day') html += `<span class="separator">/</span><span onclick="goToView('month')">Năm ${activeYear}</span>`;
+            if (currentView === 'day') html += `<span class="separator">/</span><span>Tháng ${activeMonth}</span>`;
+            document.getElementById('breadcrumb').innerHTML = html;
+        }
+
+        window.goToView = function(viewLevel) {
+            currentView = viewLevel;
+            renderTimeline();
+        };
+
+        function showEntries(entries, dayLabel) {
+            const viewer = document.getElementById('memory-viewer');
+            let html = `<h2 style="color:#e0f7fa; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px;">✨ Kỷ Niệm ${dayLabel}/${activeMonth}/${activeYear}</h2>`;
+            
+            entries.sort((a,b) => b.timestamp - a.timestamp);
+
+            entries.forEach(entry => {
+                let mediaHTML = '';
+                if (entry.mediaUrl) {
+                    if (entry.mediaType.startsWith('image/')) {
+                        mediaHTML = `<div class="entry-media"><img src="${entry.mediaUrl}"></div>`;
+                    } else if (entry.mediaType.startsWith('video/')) {
+                        mediaHTML = `<div class="entry-media"><video controls><source src="${entry.mediaUrl}" type="${entry.mediaType}"></video></div>`;
+                    }
+                }
+                
+                html += `
+                    <div class="memory-item">
+                        <div class="entry-text">${escapeHTML(String(entry.text))}</div>
+                        ${mediaHTML}
+                        <div style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:10px;">Để xóa bài viết này, hãy vào file Google Sheets của bạn để quản lý.</div>
+                    </div>
+                `;
+            });
+            viewer.innerHTML = html;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
+        }
+    </script>
+</body>
+</html>
